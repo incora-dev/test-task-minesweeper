@@ -1,8 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+
+import { setComplexity, sendCommand } from "board/boardReducer";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "configureStore";
+
+type Level = 1 | 2 | 3 | 4;
 
 function App() {
+  const complexityLevels: Level[] = [1, 2, 3, 4];
+  const { complexity } = useSelector((state: RootState) => state.board);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (complexity) {
+      dispatch(sendCommand(`new ${complexity}`));
+      dispatch(sendCommand("map"));
+    }
+  }, [complexity]);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -10,14 +27,18 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div>
+          {complexityLevels.map((btn) => (
+            <button
+              key={btn}
+              onClick={() => {
+                dispatch(setComplexity(btn));
+              }}
+            >
+              {btn}
+            </button>
+          ))}
+        </div>
       </header>
     </div>
   );
