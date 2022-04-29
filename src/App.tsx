@@ -1,46 +1,56 @@
-import logo from "./logo.svg";
 import "./App.css";
-
-import { setComplexity, sendCommand } from "board/boardReducer";
-import { useEffect } from "react";
+import { getBoardInfo, setStatus, startGame } from "board/boardReducer";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "configureStore";
+import Board from "board/Board";
 
-type Level = 1 | 2 | 3 | 4;
+import Header from "common/Header";
+import { PageWrapper, StyledPaper } from "common/styles";
+import LoseModal from "common/LoseModal";
 
 function App() {
-  const complexityLevels: Level[] = [1, 2, 3, 4];
-  const { complexity } = useSelector((state: RootState) => state.board);
+  const { complexity, status, board } = useSelector(
+    (state: RootState) => state.board
+  );
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
+  const reloadBoard = () => {
+    if (complexity) {
+      dispatch(setStatus(""));
+      dispatch(startGame(complexity));
+      dispatch(getBoardInfo());
+    }
+  };
   useEffect(() => {
     if (complexity) {
-      dispatch(sendCommand(`new ${complexity}`));
-      dispatch(sendCommand("map"));
+      reloadBoard();
     }
   }, [complexity]);
 
+  useEffect(() => {
+    if (status) {
+      setIsModalOpen(true);
+    }
+  }, [status]);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    reloadBoard();
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <div>
-          {complexityLevels.map((btn) => (
-            <button
-              key={btn}
-              onClick={() => {
-                dispatch(setComplexity(btn));
-              }}
-            >
-              {btn}
-            </button>
-          ))}
-        </div>
-      </header>
-    </div>
+    <PageWrapper>
+      <StyledPaper>
+        <Header reloadBoard={reloadBoard} currentLevel={complexity} />
+        {board.length > 0 && <Board />}
+      </StyledPaper>
+      <LoseModal
+        isOpen={isModalOpen}
+        title="You Lose"
+        handleClose={closeModal}
+      />
+    </PageWrapper>
   );
 }
 

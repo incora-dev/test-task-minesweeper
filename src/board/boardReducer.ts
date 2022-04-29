@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type TInitialState = {
-  board: number[][];
+  board: string[][];
   complexity: number | null;
   status: string;
 };
@@ -16,21 +16,22 @@ const boardSlice = createSlice({
   name: "board",
   initialState,
   reducers: {
-    setComplexity(state, action: PayloadAction<number>) {
+    setComplexity(state, action: PayloadAction<number | null>) {
       return { ...state, complexity: action.payload, board: [] };
     },
     setConnection(state, action: PayloadAction<boolean>) {
       return { ...state, connected: action.payload };
     },
     getBoardInfo() {},
+    startGame(state, action: PayloadAction<number>) {},
     getMessage() {},
-    setBoardInfo(state, action: PayloadAction<number[][]>) {
+    setBoardInfo(state, action: PayloadAction<string[][]>) {
       return { ...state, board: action.payload };
     },
-    sendCommand(state, action: PayloadAction<string>) {},
     setStatus(state, { payload }: PayloadAction<string>) {
       return { ...state, status: payload };
     },
+    sendCoordinates(state, action: PayloadAction<string>) {},
   },
 });
 
@@ -39,8 +40,9 @@ export const {
   setBoardInfo,
   setConnection,
   setComplexity,
-  sendCommand,
   setStatus,
+  startGame,
+  sendCoordinates,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;
