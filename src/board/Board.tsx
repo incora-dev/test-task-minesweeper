@@ -1,7 +1,7 @@
 import { RootState, useAppDispatch } from "configureStore";
 import { useSelector } from "react-redux";
 import BoardItem from "./BoardItem";
-import { sendCommand } from "./boardReducer";
+import { getBoardInfo, sendCoordinates } from "./boardReducer";
 import { RowWrapper, Wrapper, ScrollWrapper } from "./styles";
 
 const Board = () => {
@@ -9,8 +9,8 @@ const Board = () => {
   const dispatch = useAppDispatch();
 
   const handleOpenItem = (coordinates: string) => {
-    dispatch(sendCommand(`open ${coordinates}`));
-    dispatch(sendCommand(`map`));
+    dispatch(sendCoordinates(coordinates));
+    dispatch(getBoardInfo());
   };
   return (
     <Wrapper>

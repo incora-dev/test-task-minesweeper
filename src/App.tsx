@@ -1,5 +1,5 @@
 import "./App.css";
-import { sendCommand, setStatus } from "board/boardReducer";
+import { getBoardInfo, setStatus, startGame } from "board/boardReducer";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "configureStore";
@@ -17,9 +17,11 @@ function App() {
   const dispatch = useAppDispatch();
 
   const reloadBoard = () => {
-    dispatch(setStatus(""));
-    dispatch(sendCommand(`new ${complexity}`));
-    dispatch(sendCommand("map"));
+    if (complexity) {
+      dispatch(setStatus(""));
+      dispatch(startGame(complexity));
+      dispatch(getBoardInfo());
+    }
   };
   useEffect(() => {
     if (complexity) {

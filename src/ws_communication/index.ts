@@ -1,6 +1,12 @@
 import { take, put, call, fork, StrictEffect } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
-import { sendCommand, setBoardInfo, setStatus } from "board/boardReducer";
+import {
+  getBoardInfo,
+  sendCoordinates,
+  setBoardInfo,
+  setStatus,
+  startGame,
+} from "board/boardReducer";
 
 function connect(): Promise<WebSocket> {
   const socket = new WebSocket("wss://hometask.eg1236.com/game1/");
@@ -34,12 +40,11 @@ function websocketInitChannel(socket: WebSocket) {
         }
       }
     };
-
     return () => {};
   });
 }
 
-export function* readMessage(
+export function* readMessageSaga(
   socket: WebSocket
 ): Generator<StrictEffect, any, any> {
   const channel = yield call(websocketInitChannel, socket);
@@ -49,17 +54,37 @@ export function* readMessage(
   }
 }
 
-export function* writeMessage(
+export function* getBoard(
   socket: WebSocket
-): Generator<StrictEffect, any, any> {
+): Generator<StrictEffect, void, any> {
   while (true) {
-    const { payload } = yield take(sendCommand.type);
-
-    socket.send(payload);
+    yield take(getBoardInfo.type);
+    socket.send("map");
   }
 }
+
+export function* startGameSaga(
+  socket: WebSocket
+): Generator<StrictEffect, void, any> {
+  while (true) {
+    const { payload } = yield take(startGame.type);
+    socket.send(`new ${payload}`);
+  }
+}
+
+export function* sendCoordiantesSaga(
+  socket: WebSocket
+): Generator<StrictEffect, void, any> {
+  while (true) {
+    const { payload } = yield take(sendCoordinates.type);
+    socket.send(`open ${payload}`);
+  }
+}
+
 export default function* wsSagas(): Generator<StrictEffect, void, any> {
   const socket = yield call(connect);
-  yield fork(readMessage, socket);
-  yield fork(writeMessage, socket);
+  yield fork(readMessageSaga, socket);
+  yield fork(startGameSaga, socket);
+  yield fork(getBoard, socket);
+  yield fork(sendCoordiantesSaga, socket);
 }
