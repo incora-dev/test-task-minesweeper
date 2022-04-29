@@ -6,9 +6,10 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "configureStore";
 
-function App() {
-  const complexityLevels = [1, 2, 3, 4];
+type Level = 1 | 2 | 3 | 4;
 
+function App() {
+  const complexityLevels: Level[] = [1, 2, 3, 4];
   const { complexity } = useSelector((state: RootState) => state.board);
   const dispatch = useAppDispatch();
 
