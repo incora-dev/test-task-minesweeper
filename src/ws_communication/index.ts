@@ -24,9 +24,13 @@ function websocketInitChannel(socket: WebSocket) {
           .map((row) => row.split(""));
         emitter({ type: setBoardInfo.type, payload: formatedData });
       } else if (isOpenResponse) {
-        const status = message.data.includes("You lose");
-        if (status) {
+        const isLose = message.data.includes("You lose");
+        const isWinner = message.data.includes("You win");
+
+        if (isLose) {
           emitter({ type: setStatus.type, payload: "You lose" });
+        } else if (isWinner) {
+          emitter({ type: setStatus.type, payload: "You win" });
         }
       }
     };
