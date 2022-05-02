@@ -1,15 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+type TCoordinates = {
+  [xy: string]: boolean;
+};
 type TInitialState = {
   board: string[][];
   complexity: number | null;
   status: string;
+  flagList: TCoordinates;
 };
 
 const initialState: TInitialState = {
   board: [],
-  complexity: null,
+  complexity: 1,
   status: "",
+  flagList: {},
 };
 
 const boardSlice = createSlice({
@@ -32,6 +37,14 @@ const boardSlice = createSlice({
       return { ...state, status: payload };
     },
     sendCoordinates(state, action: PayloadAction<string>) {},
+    setFlagList(state, { payload }: PayloadAction<string>) {
+      const isFlag = state.flagList?.[payload];
+
+      return { ...state, flagList: { ...state.flagList, [payload]: !isFlag } };
+    },
+    clearFlagList(state) {
+      return { ...state, flagList: {} };
+    },
   },
 });
 
@@ -43,6 +56,8 @@ export const {
   setStatus,
   startGame,
   sendCoordinates,
+  setFlagList,
+  clearFlagList,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

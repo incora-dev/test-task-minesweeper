@@ -1,16 +1,20 @@
 import { RootState, useAppDispatch } from "configureStore";
 import { useSelector } from "react-redux";
 import BoardItem from "./BoardItem";
-import { getBoardInfo, sendCoordinates } from "./boardReducer";
+import { getBoardInfo, sendCoordinates, setFlagList } from "./boardReducer";
 import { RowWrapper, Wrapper, ScrollWrapper } from "./styles";
 
 const Board = () => {
-  const { board } = useSelector((state: RootState) => state.board);
+  const { board, flagList } = useSelector((state: RootState) => state.board);
   const dispatch = useAppDispatch();
 
   const handleOpenItem = (coordinates: string) => {
     dispatch(sendCoordinates(coordinates));
     dispatch(getBoardInfo());
+  };
+
+  const handleFlagChange = (payload: string) => {
+    dispatch(setFlagList(payload));
   };
   return (
     <Wrapper>
@@ -23,6 +27,8 @@ const Board = () => {
                 coordinates={{ x: index, y: rowIndex }}
                 point={cell}
                 onOpen={handleOpenItem}
+                handleFlagChange={handleFlagChange}
+                isFlag={flagList[`${index}${rowIndex}`]}
               />
             ))}
           </RowWrapper>
