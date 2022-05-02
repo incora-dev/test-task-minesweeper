@@ -19,9 +19,6 @@ const boardSlice = createSlice({
     setComplexity(state, action: PayloadAction<number | null>) {
       return { ...state, complexity: action.payload, board: [] };
     },
-    setConnection(state, action: PayloadAction<boolean>) {
-      return { ...state, connected: action.payload };
-    },
     getBoardInfo() {},
     startGame(state, action: PayloadAction<number>) {},
     getMessage() {},
@@ -38,7 +35,6 @@ const boardSlice = createSlice({
 export const {
   getBoardInfo,
   setBoardInfo,
-  setConnection,
   setComplexity,
   setStatus,
   startGame,
