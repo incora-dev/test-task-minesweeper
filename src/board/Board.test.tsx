@@ -1,15 +1,16 @@
 import reducer, {
   setBoardInfo,
   setComplexity,
+  setFlagList,
   setStatus,
-  startGame,
 } from "board/boardReducer";
 import expect from "expect";
 
 const inititalState = {
   board: [],
-  complexity: null,
+  complexity: 1,
   status: "",
+  flagList: {},
 };
 
 describe("board reducer", () => {
@@ -18,8 +19,8 @@ describe("board reducer", () => {
   });
   it("should cahnge complexity state", () => {
     expect(
-      reducer(inititalState, { type: setComplexity.type, payload: 1 })
-    ).toEqual({ ...inititalState, complexity: 1 });
+      reducer(inititalState, { type: setComplexity.type, payload: 2 })
+    ).toEqual({ ...inititalState, complexity: 2 });
   });
   it("should cahnge status state", () => {
     expect(
@@ -33,5 +34,10 @@ describe("board reducer", () => {
         payload: [[0, 1, 3, 4]],
       })
     ).toEqual({ ...inititalState, board: [[0, 1, 3, 4]] });
+  });
+  it("should change flag list", () => {
+    expect(
+      reducer(inititalState, { type: setFlagList.type, payload: "11" })
+    ).toEqual({ ...inititalState, flagList: { "11": true } });
   });
 });
