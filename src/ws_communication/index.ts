@@ -13,13 +13,14 @@ function connect(): Promise<WebSocket> {
   return new Promise((resolve) => {
     socket.onopen = () => {
       resolve(socket);
+      socket.send("new 1");
+      socket.send("map");
     };
   });
 }
 
 function websocketInitChannel(socket: WebSocket) {
   return eventChannel((emitter) => {
-    socket.onopen = () => {};
     socket.onmessage = (message: { data: string }) => {
       const isBoardMessage = message.data.startsWith("map:");
       const isOpenResponse = message.data.startsWith("open:");

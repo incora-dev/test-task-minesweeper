@@ -14,7 +14,10 @@ export const BoardItemWrapper = styled.div`
   cursor: pointer;
   text-align: center;
 `;
-
+export const StyledFlag = styled.div`
+  color: red;
+  font-size: 14px;
+`;
 export const RowWrapper = styled(Box)`
   display: flex;
 `;

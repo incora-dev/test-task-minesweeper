@@ -1,5 +1,10 @@
 import "./App.css";
-import { getBoardInfo, setStatus, startGame } from "board/boardReducer";
+import {
+  clearFlagList,
+  getBoardInfo,
+  setStatus,
+  startGame,
+} from "board/boardReducer";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "configureStore";
@@ -13,16 +18,19 @@ function App() {
   const { complexity, status, board } = useSelector(
     (state: RootState) => state.board
   );
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
   const reloadBoard = () => {
     if (complexity) {
       dispatch(setStatus(""));
+      dispatch(clearFlagList());
       dispatch(startGame(complexity));
       dispatch(getBoardInfo());
     }
   };
+
   useEffect(() => {
     if (complexity) {
       reloadBoard();
@@ -45,11 +53,7 @@ function App() {
         <Header reloadBoard={reloadBoard} currentLevel={complexity} />
         {board.length > 0 && <Board />}
       </StyledPaper>
-      <LoseModal
-        isOpen={isModalOpen}
-        title="You Lose"
-        handleClose={closeModal}
-      />
+      <LoseModal isOpen={isModalOpen} title={status} handleClose={closeModal} />
     </PageWrapper>
   );
 }
