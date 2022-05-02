@@ -8,7 +8,7 @@ interface TProps {
 }
 const LoseModal = ({ isOpen, handleClose, title }: TProps) => {
   return (
-    <Modal open={isOpen} onClose={handleClose}>
+    <Modal open={isOpen} onClose={handleClose} disableAutoFocus>
       <ModalWrapper>
         <ModalTitle>{title}</ModalTitle>
         <Button onClick={handleClose}> Retry</Button>
